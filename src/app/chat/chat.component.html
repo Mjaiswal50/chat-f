@@ -1,0 +1,19 @@
+<div class="container mt-4">
+    <h2 class="text-center">Group Chat</h2>
+
+    <div class="chat-box">
+        <ul class="list-group">
+            <li *ngFor="let msg of messages" class="list-group-item">
+                {{ msg }}
+            </li>
+        </ul>
+    </div>
+
+    <div class="input-group mt-3">
+        <input type="text" [(ngModel)]="message" class="form-control" placeholder="Enter your message" 
+            (keydown.enter)="sendMessage()" />
+    </div>
+    <div class="mt-1">
+        <button (click)="sendMessage()" class="btn btn-primary">Send</button>
+    </div>
+</div>
