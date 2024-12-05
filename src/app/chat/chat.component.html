@@ -1,9 +1,9 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-3">
-            <div *ngFor="let conn of allUsers">
+            <div *ngFor="let conn of allIds()">
                 <button *ngIf="this.getMySocketId()!==conn" class="py-2 mt-2  mb-2 btn btn-danger">
-                    {{conn}}
+                    {{allUsersMap[conn]}}
                 </button>
         </div>
         </div>

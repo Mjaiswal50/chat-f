@@ -34,6 +34,9 @@ export class ChatService {
   sendMessage(message: any): void {
     this.socket.emit('chat message', {...message,fromId:this.socketId});
   }
+  sendUsername(uname: any): void {
+    this.socket.emit('setMyUsername', uname );
+  }
 
   // Listen for new chat messages from the server
   listenForMessages() {

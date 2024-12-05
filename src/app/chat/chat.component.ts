@@ -16,9 +16,12 @@ export class ChatComponent implements OnInit {
   username='';
   isUserNameSet=false;
   mySocketId:any;
-  allUsers:any=[];
+  allUsersMap:any=[];
   constructor(private chatService: ChatService) { }
 
+  allIds(){
+    return Object.keys(this.allUsersMap)
+  }
   fn(){
     return !this.username
   }
@@ -37,8 +40,9 @@ export class ChatComponent implements OnInit {
     this.chatService.getMessages().subscribe((msg:any) => {
       this.messages.push(msg);
     });
-    this.chatService.getConn().subscribe((conArr:any) => {
-      this.allUsers=conArr;
+    this.chatService.getConn().subscribe((conMap:any) => {
+      this.allUsersMap = conMap;
+      this.username=this.allUsersMap[this.getMySocketId()]
     });
   }
   getMySocketId(){
@@ -54,7 +58,9 @@ export class ChatComponent implements OnInit {
     // Store the username in sessionStorage
     if (this.username.trim()) {
       sessionStorage.setItem('username', this.username);
+      this.chatService.sendUsername({ username: this.username });
       this.isUserNameSet = true;
+      
     }
   }
 }
