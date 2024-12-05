@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class ChatComponent implements OnInit {
   message: any = '';
   messages: any[] = [];
-  username='';
+  username:any='';
   isUserNameSet=false;
   mySocketId:any;
   allUsersMap:any=[];
@@ -30,6 +30,8 @@ export class ChatComponent implements OnInit {
     if (storedUsername) {
       this.username = storedUsername;
       this.isUserNameSet = true;
+      this.chatService.sendUsername({ username: this.username });
+
     }
     this.mySocketId = this.chatService.socketId;
 
@@ -42,7 +44,12 @@ export class ChatComponent implements OnInit {
     });
     this.chatService.getConn().subscribe((conMap:any) => {
       this.allUsersMap = conMap;
-      this.username=this.allUsersMap[this.getMySocketId()]
+      this.updateMsgs()
+      if(sessionStorage.getItem('username')){
+        this.username = sessionStorage.getItem('username');
+      }else{
+        this.username = this.allUsersMap[this.getMySocketId()]
+      }
     });
   }
   getMySocketId(){
@@ -60,7 +67,12 @@ export class ChatComponent implements OnInit {
       sessionStorage.setItem('username', this.username);
       this.chatService.sendUsername({ username: this.username });
       this.isUserNameSet = true;
-      
     }
   }
+  updateMsgs(){
+    this.messages.forEach(data=>{
+      data.username = this.allUsersMap[data.fromId]
+    })
+  }
+
 }

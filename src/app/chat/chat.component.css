@@ -1,0 +1,54 @@
+/* Custom Scrollbar Style */
+.chat-box {
+    max-height: 400px;
+    overflow-y: scroll;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #4e73df #f1f1f1; /* Firefox */
+}
+
+/* For Webkit browsers (Chrome, Safari) */
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: #4e73df;
+    border-radius: 4px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Styling the message list in chat */
+.chat-box ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.chat-box li {
+    padding: 10px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.chat-box .list-group-item {
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.chat-box .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Input field for message */
+#exampleFormControlTextarea1 {
+    border-radius: 5px;
+    border-color: #ced4da;
+    margin-bottom: 10px;
+}
+
+/* Styling for the Send button */
+button.ms-2.mt-3.btn-block {
+    border-radius: 5px;
+}
