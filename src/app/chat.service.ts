@@ -7,51 +7,59 @@ import { io, Socket } from 'socket.io-client';
 })
 export class ChatService {
   private socket: Socket;
-  private messageSubject: Subject<string> = new Subject();
-  private connSubject: Subject<string> = new Subject();
-  socketId:any;
+  private messageSubject: Subject<any> = new Subject();
+  private connSubject: Subject<any> = new Subject();
+  private socketId: any = '';
+
   constructor() {
     // Connect to WebSocket server
-    // this.socket = io('http://localhost:3000');
     this.socket = io('http://localhost:3000', {
-      transports: ['websocket'],  // Use WebSocket transport only
-      withCredentials: true
+      transports: ['websocket'], // Use WebSocket transport only
+      withCredentials: true,
     });
+
     this.socket.on('connect', () => {
-      console.log('Connected with socket ID:', this.socket.id);  // socket.id will give you the ID
-      this.socketId = this.socket.id
+      console.log('Connected with socket ID:', this.socket.id);
+      this.socketId = this.socket.id;
     });
+
     this.socket.on('disconnect', () => {
-      console.log('Connected with socket ID:', this.socket.id);  // socket.id will give you the ID
-      this.socketId = ''
+      console.log('Disconnected from server');
+      this.socketId = '';
     });
   }
-  getSocketId(){
-   return this.socketId
+
+  getSocketId(): string {
+    return this.socketId;
   }
 
-  // Send a chat message to the server
+  // Send chat message to server
   sendMessage(message: any): void {
-    this.socket.emit('chat message', {...message,fromId:this.socketId});
-  }
-  sendUsername(uname: any): void {
-    this.socket.emit('setMyUsername', uname );
+    this.socket.emit('chat message', { ...message, fromId: this.socketId });
   }
 
-  // Listen for new chat messages from the server
-  listenForMessages() {
+  // Send username to server
+  sendUsername(userData: any): void {
+    this.socket.emit('setMyUsername', userData);
+  }
+
+  // Listen for chat messages
+  listenForMessages(): void {
     this.socket.on('chat message', (msg: any) => {
       this.messageSubject.next(msg);
     });
-    this.socket.on('newConnection', (msg: any) => {
-      this.connSubject.next(msg);
+
+    this.socket.on('newConnection', (connections: any) => {
+      this.connSubject.next(connections);
     });
   }
 
-  // Observable to subscribe to new messages
+  // Observable for new messages
   getMessages() {
     return this.messageSubject.asObservable();
   }
+
+  // Observable for user connections
   getConn() {
     return this.connSubject.asObservable();
   }
