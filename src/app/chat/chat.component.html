@@ -1,26 +1,83 @@
-<div class="chat-container">
-    <!-- Chat Header -->
-    <div class="chat-header">
-        <span>Global Chat - {{ username }}</span>
-        <input *ngIf="!isUserNameSet"  [(ngModel)]="this.username" placeholder="Set Userrname" class="btn btn-light btn-sm"  (keydown.enter)="setUsername()">
-    </div>
 
-    <!-- Chat Body -->
-    <div class="chat-body">
-        <div *ngFor="let msg of messages"
-            [ngClass]="{'chat-bubble sent': (getMySocketId() == msg.fromId), 'chat-bubble received': (getMySocketId() != msg.fromId)}">
-            <strong *ngIf="getMySocketId() != msg.fromId">{{ msg.username?msg.username:'Lost_User' }}:</strong>
-            {{ msg.message }}
-            <small class="d-block text-muted mt-1" style="font-size: 0.7rem;">{{ msg.time | timeOnly }}</small>
+<div class="mt-5">
+<div class="container border rounded h-25" [ngStyle]="{'background-color': style1 ,'color': style2  ,    'background-image': 'linear-gradient(' + style0 + ', ' + style1 + ')'
+}" >
+    <div class="row">
+        <!-- User List Section -->
+        <div class="col-md-3 border-right">
+            <h4 class="text-center mb-3">Users</h4>
+            <hr class="mb-4">
+            <div *ngFor="let conn of allIds()" class="mb-3">
+                <!-- Hide button for self, display user list with style -->
+                <button *ngIf="this.getMySocketId() !== conn" class="btn w-100 text-truncate " [ngStyle]="{'background-color': style4 ,'color': style5}"
+                    title="{{allUsersMap[conn]}}">
+                    {{ allUsersMap[conn] }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Box Section -->
+        <div class="col-md-9">
+            <!-- Username Section -->
+            <div class="text-center mb-4">
+                <h2 class="d-inline-block">Global Chat - {{ username }}</h2>
+                <!-- Username input field if not set -->
+                <div *ngIf="!isUserNameSet" class="mt-3">
+                    <input type="text" [(ngModel)]="username" class="form-control d-inline-block w-50"
+                        placeholder="Enter your name" />
+                    <br>
+                    <button (click)="setUsername()" class="btn btn-info mt-2 ms-2">
+                        Set Username
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Box Section -->
+            <div class="chat-box mb-4" style="max-height: 400px; overflow-y: scroll;">
+                <ul class="list-group">
+                    <li *ngFor="let msg of messages" class="mb-2 d-block" [ngClass]="{'text-right': (this.getMySocketId() == msg.fromId)}"  >
+                        <span [ngStyle]="{'background-color': style3 }" class="p-2 rounded">
+                        <strong>{{ this.getMySocketId() == msg.fromId ? '' : msg.username+": " }}</strong>
+                        <span>{{ msg.message }} &nbsp; </span>
+                        <span class="mt-2" style="font-size: 70%">{{ (msg.time | timeOnly)}}</span>
+  
+                        </span>
+
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Message Input Section -->
+            <div class="input-group">
+                <div class="form-group container">
+                    <div class="col-12">
+                        <!-- <input class="form-control" id="exampleFormControlTextarea1" maxlength="70" type="text" [(ngModel)]="message"
+                            class="form-control" placeholder="Enter your message" (keydown.enter)="sendMessage()"
+                            aria-label="Message Input" autofocus> -->
+                            <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="70" type="text" [(ngModel)]="message"
+                            class="form-control" placeholder="Enter your message" (keydown.enter)="sendMessage()"
+                            aria-label="Message Input" autofocu cols="3" rows="2"></textarea>
+                        <!-- <button (click)="sendMessage()" class="btn btn-primary ms-2 mt-3 btn-block">
+                            Send
+                        </button> -->
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <!-- Chat Footer -->
-    <div class="chat-footer">
-        <input maxlength="82" type="text" [(ngModel)]="message" class="chat-input" placeholder="Type a message..."
-            (keydown.enter)="sendMessage()" />
-        <button class="send-button" (click)="sendMessage()">
-            <i class="bi bi-send-fill"></i>
-        </button>
+</div>
+</div>
+<div class="container">
+    <div class="row text-center mt-1 mb-1 d-block">
+        <input type="color" [(ngModel)]="style0">
+        <input type="color" [(ngModel)]="style1">
+        <input type="color" [(ngModel)]="style2">
+        <input type="color" [(ngModel)]="style3">
+        <input type="color" [(ngModel)]="style4">
+        <input type="color" [(ngModel)]="style5">
     </div>
 </div>
+
+

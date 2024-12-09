@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat.service';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TimeOnlyPipe } from '../time-only.pipe';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { TimeOnlyPipe } from "../time-only.pipe";
 
 @Component({
   selector: 'app-chat',
@@ -11,67 +12,76 @@ import { TimeOnlyPipe } from '../time-only.pipe';
   imports: [CommonModule, FormsModule, TimeOnlyPipe]
 })
 export class ChatComponent implements OnInit {
-  message: string = '';
-  messages: any[] = [];
-  username: any = '';
-  isUserNameSet: boolean = false;
-  allUsersMap: { [key: string]: string } = {};
+  message: any = '';
+  style1 = 'yellow';
+  style2 = 'black'
+  style3 = 'pink'
+  style0 = 'red'
+  style4='teal'
+  style5='white'
 
+  messages: any[] = [];
+  username:any='';
+  isUserNameSet=false;
+  mySocketId:any;
+  allUsersMap:any=[];
   constructor(private chatService: ChatService) { }
 
+  allIds(){
+    return Object.keys(this.allUsersMap)
+  }
+  fn(){
+    return !this.username
+  }
   ngOnInit(): void {
-    // Retrieve stored username if available
     const storedUsername = sessionStorage.getItem('username');
     if (storedUsername) {
       this.username = storedUsername;
       this.isUserNameSet = true;
       this.chatService.sendUsername({ username: this.username });
+
     }
+    this.mySocketId = this.chatService.socketId;
 
-    // Listen for incoming messages
+    // Start listening for incoming messages
     this.chatService.listenForMessages();
-    this.chatService.getMessages().subscribe((msg: any) => {
-      this.messages.push(msg);
-    });
 
-    // Update connections and user list
-    this.chatService.getConn().subscribe((connections: any) => {
-      this.allUsersMap = connections;
-      this.updateMessageUsernames();
-      if (sessionStorage.getItem('username')) {
+    // Subscribe to the message observable
+    this.chatService.getMessages().subscribe((msg:any) => {
+      this.messages.push(msg);
+      
+    });
+    this.chatService.getConn().subscribe((conMap:any) => {
+      this.allUsersMap = conMap;
+      this.updateMsgs()
+      if(sessionStorage.getItem('username')){
         this.username = sessionStorage.getItem('username');
-      } else {
+      }else{
         this.username = this.allUsersMap[this.getMySocketId()]
       }
     });
   }
-
-  getMySocketId(): string {
-    return this.chatService.getSocketId();
+  getMySocketId(){
+    return this.chatService.getSocketId()
   }
-
   sendMessage(): void {
     if (this.message.trim()) {
-      this.chatService.sendMessage({
-        message: this.message,
-        username: this.username,
-        time: new Date(),
-      });
-      this.message = ''; // Clear input after sending
+      this.chatService.sendMessage({message:this.message,username:this.username,time:new Date()});
+      this.message = ''; // Clear the message input
     }
   }
-
   setUsername(): void {
+    // Store the username in sessionStorage
     if (this.username.trim()) {
       sessionStorage.setItem('username', this.username);
       this.chatService.sendUsername({ username: this.username });
       this.isUserNameSet = true;
     }
   }
-
-  updateMessageUsernames(): void {
-    this.messages.forEach((msg) => {
-      msg.username = this.allUsersMap[msg.fromId];
-    });
+  updateMsgs(){
+    this.messages.forEach(data=>{
+      data.username = this.allUsersMap[data.fromId]
+    })
   }
+
 }
