@@ -75,23 +75,23 @@
 
 <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content" [ngStyle]="{'background-color': style12 }" >
+            <div class="modal-header"  [ngStyle]="{'background-color': style6 ,'color': style7  }">
                 <h5 class="modal-title" id="chatModalLabel">Chat with {{ allUsersMap[activeUserId]  }}</h5>
                 <button type="button" class="btn-close" (click)="closeModal()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body chat-box">
+            <div class="modal-body chat-box" [ngStyle]="{'background-color': style12 }" >
                 <!-- Chat Messages -->
                  <ng-container *ngIf="activeUserId && userChats[activeUserId]" >
                 <div *ngFor="let message of userChats[activeUserId]">
-                    <div class="message" [ngClass]="{'sent': message?.isSender, 'received': !message?.isSender}">
+                    <div [ngStyle]="{'background-color': (message?.isSender)?style9:style11,'color': (message?.isSender)?style8:style10  }" class="message" [ngClass]="{'sent': message?.isSender, 'received': !message?.isSender}">
                         {{ message?.content }}
                     </div>
                 </div>
                  </ng-container>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer"  [ngStyle]="{'background-color': style12 }" >
                 <!-- Input for Sending Message -->
                 <input type="text" [(ngModel)]="messageInput" (keydown.enter)="sendPrivateMessage()"
                     placeholder="Type your message here..." class="form-control" />
@@ -108,5 +108,12 @@
         <input type="color" [(ngModel)]="style3">
         <input type="color" [(ngModel)]="style4">
         <input type="color" [(ngModel)]="style5">
+        <input type="color" [(ngModel)]="style6">
+        <input type="color" [(ngModel)]="style7">
+        <input type="color" [(ngModel)]="style8">
+        <input type="color" [(ngModel)]="style9">
+        <input type="color" [(ngModel)]="style10">
+        <input type="color" [(ngModel)]="style11"> 
+        <input type="color" [(ngModel)]="style12">
     </div>
 </div>

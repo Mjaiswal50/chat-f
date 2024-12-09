@@ -21,6 +21,13 @@ export class ChatComponent implements OnInit {
   style0 = 'red'
   style4='teal'
   style5='white'
+  style6 = 'orange'
+  style7 = 'brown'
+  style8 = 'indigo'
+  style9 = 'lightsteelblue'
+  style10 = 'black'
+  style11 = 'papayawhip'
+  style12 = 'mistyrose'
 
   messages: any[] = [];
   username:any='';
