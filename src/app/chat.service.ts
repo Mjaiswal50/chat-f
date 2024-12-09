@@ -8,6 +8,8 @@ import { io, Socket } from 'socket.io-client';
 export class ChatService {
   private socket: Socket;
   private messageSubject: Subject<string> = new Subject();
+  private pvtMessageSubject: Subject<any> = new Subject();
+
   private connSubject: Subject<string> = new Subject();
   socketId:any;
   constructor() {
@@ -29,6 +31,25 @@ export class ChatService {
   getSocketId(){
    return this.socketId
   }
+
+  sendPrivateMsg(toid:any,msg:any){
+    this.socket.emit('private message', { to: toid, content: msg  });
+  }
+
+  listenPrivateMsg(){
+    this.socket.on('private message', (obj ) => {
+     console.log("🚀 ~ ChatService ~ this.socket.on ~ obj:", obj)
+     let {from, content} =obj;
+      console.log(`Message from ${from}: ${content}`);
+      this.pvtMessageSubject.next({ from, content })
+    });
+  }
+
+  getPrivateMessageData(){
+    return this.pvtMessageSubject;
+  }
+
+
 
   // Send a chat message to the server
   sendMessage(message: any): void {
